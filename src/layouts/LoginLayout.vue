@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <div class="fill-height grey darken-4">
+    <div class="fill-height white " id="main">
       <router-view>
       </router-view>
     </div>
@@ -13,6 +13,6 @@ export default {
 }
 </script>
 
-<style>
-@import './assets/style.css';
+<style scoped>
+
 </style>

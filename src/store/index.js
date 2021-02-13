@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
 Vue.use(Vuex)
 import moment from "moment";
 const  format = 'YYYY-MM-DD'
+import auth from "@/store/modules/auth";
+import snackBar from "@/store/modules/snackBar";
+
 export default new Vuex.Store({
     state: {
         picker: moment().format(format),
@@ -46,5 +48,8 @@ export default new Vuex.Store({
             return state.calendarType;
         }
     },
-    modules: {}
+    modules: {
+        auth,
+        snackBar
+    }
 })

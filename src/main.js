@@ -8,8 +8,13 @@ import store from './store'
 Vue.config.productionTip = false
 
 new Vue({
+  async mounted () {
+    await this.$store.dispatch('auth/fetchUser')
+  },
   router,
   vuetify,
   store,
   render: h => h(App)
 }).$mount('#app')
+
+

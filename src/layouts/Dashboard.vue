@@ -26,17 +26,16 @@
       </v-container>
     </v-main>
 
-    <v-footer app>
-      <!-- -->
-    </v-footer>
+    <snackbar />
   </v-app>
 </template>
 
 <script>
 import moment from 'moment'
+import Snackbar from "@/components/Snackbar";
 export default {
   name: "Dashboard",
-
+  components: {Snackbar},
   data: () => ({
     drawer: false,
     group: null,

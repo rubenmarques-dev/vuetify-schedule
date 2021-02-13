@@ -1,14 +1,14 @@
 import axios from 'axios'
-/*import router from '../router'
-import { clearAuthToken, refreshToken, isLoggedIn } from './AuthRepository'*/
+import router from '../router'
+import { clearAuthToken, refreshToken, isLoggedIn , AUTH_TOKEN_KEY} from './AuthRepository'
 
 const API = axios.create({
   baseURL: 'http://127.0.0.1:8000/',
 })
-/*
+
 API.interceptors.request.use(
     config => {
-        const token = localStorage.getItem('authToken')
+        const token = localStorage.getItem(AUTH_TOKEN_KEY)
 
         if (token) {
             config.headers.common.Authorization = `Bearer ${token}`
@@ -41,5 +41,5 @@ API.interceptors.response.use((response) => {
 
     return Promise.reject(error)
 })
-*/
+
 export default API

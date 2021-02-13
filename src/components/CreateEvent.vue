@@ -169,8 +169,12 @@ export default {
   methods: {
     createEvent(){
       MeetingRepository.store(this.body)
-      .then(() => {
-        debugger
+      .then(({data}) => {
+        this.$store.commit('snackBar/setSnack', {
+          color: 'success',
+          message: 'Meeting Created',
+        })
+        this.$emit('eventCreated', data.data)
       })
       .catch(error => {
         debugger

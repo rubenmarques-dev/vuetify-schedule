@@ -51,7 +51,7 @@
                 v-bind="attrs"
                 v-on="on"
             >
-              <span>{{ calendarType}}</span>
+              <span>{{ calendarType }}</span>
               <v-icon right>
                 mdi-menu-down
               </v-icon>
@@ -70,7 +70,6 @@
     </v-sheet>
 
 
-
     <v-calendar
         ref="calendar"
         :now="today"
@@ -86,6 +85,7 @@
     <create-event
         :start-date="dateClicked"
         @close="dateClicked=null"
+        @eventCreated="handleEventCreated"
         v-if="dateClicked"
     >
 
@@ -96,12 +96,13 @@
 <script>
 import CreateEvent from "@/components/CreateEvent";
 import moment from "moment";
-
+import EventBus from "@/plugins/EventBus";
 import MeetingRepository from "@/api/MeetingRepository";
+
 export default {
   components: {CreateEvent},
   data: () => ({
-    today: '2019-01-08',
+    today:  moment().format('YYYY-MM-DD'),
     dateClicked: null,
     events: []
   }),
@@ -115,22 +116,25 @@ export default {
     picker() {
       return this.$store.getters.getPicker
     },
+
   },
   created() {
     MeetingRepository.index()
-    .then(({data}) => {
-      debugger
-      this.events = data.data;
-    })
-    .catch((error) => {
-      debugger
-    })
+        .then(({data}) => {
+          this.events = data.data;
+          EventBus.$on('popCreateEventDialog', () => {
+            this.dateClicked = this.today;
+          })
+        })
+        .catch((error) => {
+          debugger
+        })
   },
   methods: {
-    previousDate(){
+    previousDate() {
       this.$store.dispatch('callPreviousDate')
     },
-    nextDate(){
+    nextDate() {
       this.$store.dispatch('callNextDate')
     },
     handleChangeCalendarType(value) {
@@ -158,13 +162,19 @@ export default {
                }) {
       this.dateClicked = date
     },
-    handleClickEvent(value){
+    handleClickEvent(value) {
       debugger
+    },
+    handleEventCreated(data) {
+
+      this.events.push(data)
+      this.dateClicked = false;
     }
   }
 }
 </script>
 
 <style scoped>
+
 
 </style>
