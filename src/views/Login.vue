@@ -3,11 +3,15 @@
 
 
     <v-row class="justify-center">
-      <v-img
-          src="cocus.png"
-          contain
-          height="240"
-      />
+      <v-col
+      class="d-flex align-center">
+        <v-img
+            src="cocus.png"
+            contain
+            height="180"
+        />
+      </v-col>
+
 
       <v-col
           class="fill-height"
