@@ -242,6 +242,9 @@ export default {
       }
     },
   },
+  destroyed() {
+    this.deleteEventCountdown = false
+  },
   created() {
     if (this.action === 'create') {
       this.event.startDate = this.eventDate
@@ -300,17 +303,18 @@ export default {
     },
     countDownMethod(){
       setTimeout(() => {
-        if(this.countDown && this.deleteEventCountdown){
-          this.countDown--
+        if(!parseFloat(this.countDown)){
+          this.deleteEvent();
+        }
+        else if(this.deleteEventCountdown){
+          this.countDown = (this.countDown - 0.1).toFixed(1)
           this.countDownMethod();
         }
-        else if(!this.deleteEventCountdown) {
+        else {
           this.countDown = 5
         }
-        else{
-        this.deleteEvent();
-        }
-      }, 1000)
+
+      }, 100)
     },
     cancelCountdown(){
       this.deleteEventCountdown = false;
@@ -329,44 +333,5 @@ export default {
 
 <style scoped>
 
-input[type="date"] {
-  position: relative;
-}
-
-/* create a new arrow, because we are going to mess up the native one
-see "List of symbols" below if you want another, you could also try to add a font-awesome icon.. */
-input[type="date"]:after {
-  content: "\25BC";
-  color: #555;
-  padding: 0 5px;
-}
-
-/* change color of symbol on hover */
-input[type="date"]:hover:after {
-  color: #bf1400;
-}
-
-/* make the native arrow invisible and stretch it over the whole field so you can click anywhere in the input field to trigger the native datepicker*/
-input[type="date"]::-webkit-calendar-picker-indicator {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: auto;
-  height: auto;
-  color: transparent;
-  background: transparent;
-}
-
-/* adjust increase/decrease button */
-input[type="date"]::-webkit-inner-spin-button {
-  z-index: 1;
-}
-
-/* adjust clear button */
-input[type="date"]::-webkit-clear-button {
-  z-index: 1;
-}
 
 </style>
