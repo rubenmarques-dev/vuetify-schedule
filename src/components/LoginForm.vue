@@ -5,8 +5,7 @@
         class="mb-4"
         label="Username"
         :error-messages="this.errors.username"
-        hint="This field is case sensitive."
-        persistent-hint
+
         :loading="requesting"
         v-model="username"
     >
@@ -22,6 +21,7 @@
     <v-col class="ma-0 pa-0 d-flex justify-end">
       <v-btn
           color="primary"
+          :loading="requesting"
           @click="validate"
       >
         Login
