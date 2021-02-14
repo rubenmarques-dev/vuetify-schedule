@@ -37,8 +37,8 @@ import {login} from "@/api/AuthRepository";
 export default {
   name: 'LoginForm',
   data: () => ({
-    username: 'CocusCeo',
-    password: 'CocusCeo',
+    username: '',
+    password: '',
     errors: {
       username: null,
       password: null
