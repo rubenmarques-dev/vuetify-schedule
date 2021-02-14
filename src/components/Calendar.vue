@@ -13,10 +13,12 @@
         >
           Today
         </v-btn>
+        <v-spacer></v-spacer>
         <v-btn
             fab
             text
             small
+
             color="grey darken-2"
             @click="previousDate"
         >
@@ -25,7 +27,8 @@
           </v-icon>
         </v-btn>
 
-        <v-toolbar-title v-if="$refs.calendar">
+
+        <v-toolbar-title class="hidden-xs-only" v-if="$refs.calendar">
           {{ $refs.calendar.title }}
         </v-toolbar-title>
         <v-btn
@@ -78,32 +81,40 @@
         event-name="title"
         color="primary"
         :type="calendarType"
-        @click:date="handleDate"
-        @click:day="handleDate"
+        event-start="startDate"
+        event-end="endDate"
         @click:event="handleClickEvent"
+        @click:date="handleClickDate"
+        @click:time="handleClickTime"
+        @click:day="handleClickDay"
     ></v-calendar>
-    <create-event
-        :start-date="dateClicked"
-        @close="dateClicked=null"
-        @eventCreated="handleEventCreated"
-        v-if="dateClicked"
+    <create-or-update-event
+        v-if="eventDate || eventShow"
+        :event-date="eventDate"
+        :original="eventShow"
+        :action="action"
+        @create="handleEventCreate"
+        @update="handleEventUpdate"
+        @cancel="clearLocalState"
     >
-
-    </create-event>
+    </create-or-update-event>
   </div>
 </template>
 
 <script>
-import CreateEvent from "@/components/CreateEvent";
+import CreateOrUpdateEvent from "@/components/CreateOrUpdateEvent";
 import moment from "moment";
 import EventBus from "@/plugins/EventBus";
 import MeetingRepository from "@/api/MeetingRepository";
 
 export default {
-  components: {CreateEvent},
+  components: {CreateOrUpdateEvent},
   data: () => ({
-    today:  moment().format('YYYY-MM-DD'),
-    dateClicked: null,
+    today: moment().format('YYYY-MM-DD'),
+    calendarEventClicked: false,
+    eventDate: null,
+    eventShow: null,
+    action: null,
     events: []
   }),
   mounted() {
@@ -116,18 +127,23 @@ export default {
     picker() {
       return this.$store.getters.getPicker
     },
-
+    actionUpdate() {
+      return 'update'
+    },
+    actionCreate() {
+      return 'create'
+    },
   },
   created() {
     MeetingRepository.index()
         .then(({data}) => {
           this.events = data.data;
           EventBus.$on('popCreateEventDialog', () => {
-            this.dateClicked = this.today;
+            this.action = this.actionCreate
+            this.eventDate = this.today;
           })
         })
         .catch((error) => {
-          debugger
         })
   },
   methods: {
@@ -141,35 +157,66 @@ export default {
       this.$store.dispatch('updateCalendarType', value)
     },
     setToday() {
-      // eslint-disable-next-line no-debugger
       this.$store.dispatch('updatePicker', moment().format('YYYY-MM-DD'))
     },
-
-    handleDate({
-                 date,
-                 day,
-                 future,
-                 hasDay,
-                 hasTime,
-                 hour,
-                 minute,
-                 month,
-                 past,
-                 present,
-                 time,
-                 weekday,
-                 year,
-               }) {
-      this.dateClicked = date
+    handleClickDate({date, time}) {
+      if (this.calendarEventClicked) {
+        this.calendarEventClicked = false;
+      } else {
+        if (time) {
+          this.eventDate = date
+        } else {
+          this.action = 'create'
+          this.eventDate = `${date} ${time}`
+        }
+      }
     },
-    handleClickEvent(value) {
+    handleClickDay({date}) {
+      if (this.calendarEventClicked) {
+        this.calendarEventClicked = false
+      } else {
+        this.action = this.actionCreate
+        this.eventDate = date
+      }
+    },
+    handleClickTime({date, time}) {
+      if (this.calendarEventClicked) {
+        this.calendarEventClicked = false;
+      } else {
+        this.action = this.actionCreate
+        this.eventDate = `${date} ${time}`
+      }
+    },
+    handleClickEvent({event}) {
+      this.calendarEventClicked = true
+      this.eventShow = event
+      this.action = this.actionUpdate
+    },
+    handleEventCreate(event) {
+      this.$store.commit('snackBar/setSnack', {
+        color: 'success',
+        message: 'Meeting Created',
+      });
+      this.events.push(event)
+      this.clearLocalState()
+    },
+    handleEventUpdate(eventUpdated) {
+      this.$store.commit('snackBar/setSnack', {
+        color: 'success',
+        message: 'Meeting Updated',
+      })
       debugger
+      this.events = this.events.filter(event => event.id !== eventUpdated.id)
+      this.events.push(eventUpdated)
+      this.clearLocalState()
     },
-    handleEventCreated(data) {
-
-      this.events.push(data)
-      this.dateClicked = false;
+    clearLocalState() {
+      this.eventShow = null
+      this.eventDate = null
+      this.action = null
     }
+
+
   }
 }
 </script>

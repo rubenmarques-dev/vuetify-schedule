@@ -17,9 +17,7 @@ export default {
     }
   },
   methods: {
-    // eslint-disable-next-line no-unused-vars
     handleChange(value){
-      // eslint-disable-next-line no-debugger
       this.$store.dispatch('updatePicker',value)
     }
   }

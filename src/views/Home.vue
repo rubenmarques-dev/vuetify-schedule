@@ -20,9 +20,9 @@
           </v-col>
 
           <v-col>
-            <date-picker>
+            <store-date-picker>
 
-            </date-picker>
+            </store-date-picker>
           </v-col>
 
         </v-row>
@@ -42,14 +42,14 @@
 
 <script>
 
-import DatePicker from "@/components/DatePicker";
+import StoreDatePicker from "@/components/StoreDatePicker";
 import Calendar from "@/components/Calendar";
 import EventBus from "@/plugins/EventBus";
 
 export default {
   name: 'Home',
   // eslint-disable-next-line vue/no-unused-components
-  components: {Calendar, DatePicker},
+  components: {Calendar, StoreDatePicker},
   computed: {
     calendarType() {
       return this.$store.getters.getCalendarType

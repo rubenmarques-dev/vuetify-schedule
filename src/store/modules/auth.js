@@ -23,6 +23,9 @@ const actions = {
         })
     })
   },
+  setUserToNull ({ commit }) {
+    commit('updateUser', null)
+  },
 }
 
 const getters = {

@@ -12,9 +12,12 @@
       <v-text-field
           :value="text"
           :label="label"
-          prepend-icon="mdi-clock-time-four-outline"
+          prepend-icon="mdi-calendar-clock"
           v-bind="attrs"
           v-on="on"
+          :error-messages="error"
+          autocomplete="off"
+          readonly
       ></v-text-field>
     </template>
     <slot v-if="showDropdown"></slot>
@@ -33,6 +36,10 @@ export default {
     text: {
       type: String,
       require:true
+    },
+    error: {
+      type: String,
+      require:true
     }
   },
   data() {
@@ -40,11 +47,6 @@ export default {
       showDropdown:false
     }
   },
-  watch:{
-    text(){
-      this.showDropdown = false;
-    }
-  }
 }
 </script>
 

@@ -1,35 +1,25 @@
 <template>
-  <v-container class="fill-height justify-center align-center">
+  <v-container class="fill-height justify-center align-center pa-8">
+
 
     <v-row class="justify-center">
+      <v-img
+          src="cocus.png"
+          contain
+          height="240"
+      />
 
       <v-col
-          cols="12"
-          md="5"
-      >
-        <v-img
-            src="img.png"
-            class="my-3"
-            contain
-            height="200"
-        />
-      </v-col>
-
-
-      <v-col
-
           class="fill-height"
           cols="12"
           md="5">
-        <v-card>
-          <v-card-text>
-            <login-form>
+        <v-card width="450">
+          <v-card-text class="grey lighten-3">
+            <login-form >
 
             </login-form>
           </v-card-text>
-
         </v-card>
-
       </v-col>
     </v-row>
 

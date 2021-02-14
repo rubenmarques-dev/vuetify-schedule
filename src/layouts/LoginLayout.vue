@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <div class="fill-height white " id="main">
+    <div class="fill-height grey darken-4" id="main">
       <router-view>
       </router-view>
     </div>

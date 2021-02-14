@@ -1,17 +1,32 @@
 <template>
   <v-app>
-    <v-navigation-drawer
-        app
-        v-model="drawer"
 
-        mobile-breakpoint="960"
-    >
+    <v-app-bar app class="px-8">
 
-    </v-navigation-drawer>
 
-    <v-app-bar app>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-spacer></v-spacer>
+      <v-menu
+          offset-y
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
 
+              icon
+              v-bind="attrs"
+              v-on="on"
+          >
+            <v-icon>mdi-account</v-icon>
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item
+              @click="logout"
+          >
+            <v-list-item-title>Logout</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
 
     </v-app-bar>
 
@@ -26,18 +41,19 @@
       </v-container>
     </v-main>
 
-    <snackbar />
+    <snackbar/>
   </v-app>
 </template>
 
 <script>
-import moment from 'moment'
+import {logoutUser} from "@/api/AuthRepository";
 import Snackbar from "@/components/Snackbar";
+
 export default {
   name: "Dashboard",
   components: {Snackbar},
   data: () => ({
-    drawer: false,
+
     group: null,
   }),
   computed: {
@@ -48,6 +64,15 @@ export default {
       return this.$store.getters.getCalendarType
     },
   },
+  methods: {
+    logout() {
+      logoutUser()
+          .then(() => {
+            this.$store.dispatch("auth/setUserToNull")
+            this.$router.push('/login')
+          })
+    }
+  }
 
 
 }

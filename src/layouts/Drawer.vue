@@ -12,7 +12,7 @@
 
 <script>
 
-import DatePicker from "@/components/DatePicker";
+import DatePicker from "@/components/StoreDatePicker";
 export default {
   name: 'Drawer',
   components: {DatePicker},

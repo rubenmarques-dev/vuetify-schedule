@@ -48,19 +48,21 @@ export function getUser () {
     })
 }
 
-export function logout () {
-    return new Promise((resolve) => {
-        logoutUser()
-        resolve()
+export function logoutUser () {
+    return new Promise((resolve, reject) => {
+        Repository.post('/api/auth/logout')
+            .then(res => {
+               setAuthToken(null)
+                resolve()
+            })
+            .catch(error => {
+                reject(error)
+            })
     })
 }
 
-export function logoutUser () {
-    clearAuthToken()
-}
 
 export function setAuthToken (token) {
-    debugger
     axios.defaults.headers.common.Authorization = `Bearer ${token}`
     localStorage.setItem(AUTH_TOKEN_KEY, token)
 }
