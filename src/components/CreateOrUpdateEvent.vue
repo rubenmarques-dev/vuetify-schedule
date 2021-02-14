@@ -7,8 +7,40 @@
         max-width="600"
     >
       <v-card>
-        <v-card-title>
+        <v-card-title class="d-flex justify-space-between">
           <span class="headline">{{ action | capitalize }} Event</span>
+
+
+          <div v-if="action === 'update'">
+            <v-btn
+                class="mx-2"
+                fab
+                dark
+                x-small
+                color="red"
+                @click="handleDelete"
+                v-if="!deleteEventCountdown"
+
+            >
+              <v-icon>
+                mdi-delete
+              </v-icon>
+            </v-btn>
+
+            <v-btn
+                class="mx-2"
+                fab
+                dark
+                x-small
+                color="red"
+                @click="cancelCountdown"
+                :loading="requesting"
+                v-else
+            >
+              {{countDown}}
+            </v-btn>
+          </div>
+
         </v-card-title>
         <v-card-text style="max-height: 74vh; overflow-y: scroll">
           <v-container>
@@ -188,7 +220,8 @@ export default {
         startDate: null,
         endDate: null,
       },
-
+      deleteEventCountdown: false,
+      countDown: 5
     }
   },
   computed: {
@@ -260,6 +293,35 @@ export default {
       this.participants.push(data)
       this.event.participants.push(data)
       this.showAddParticipantDialog = false
+    },
+    handleDelete(){
+      this.deleteEventCountdown = true;
+      this.countDownMethod()
+    },
+    countDownMethod(){
+      setTimeout(() => {
+        if(this.countDown && this.deleteEventCountdown){
+          this.countDown--
+          this.countDownMethod();
+        }
+        else if(!this.deleteEventCountdown) {
+          this.countDown = 5
+        }
+        else{
+        this.deleteEvent();
+        }
+      }, 1000)
+    },
+    cancelCountdown(){
+      this.deleteEventCountdown = false;
+      this.countDown = 5
+    },
+    deleteEvent(){
+      this.requesting = true
+      MeetingRepository.delete(this.event.id)
+      .then( () => {
+        this.$emit('delete', this.event.id)
+      })
     }
   }
 }

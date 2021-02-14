@@ -15,4 +15,7 @@ export default {
     update (id,body) {
         return Repository.put(`${resource}/${id}`,body)
     },
+    delete (id) {
+        return Repository.delete(`${resource}/${id}`)
+    },
 }

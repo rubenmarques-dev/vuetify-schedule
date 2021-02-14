@@ -95,6 +95,7 @@
         :action="action"
         @create="handleEventCreate"
         @update="handleEventUpdate"
+        @delete="handleEventDelete"
         @cancel="clearLocalState"
     >
     </create-or-update-event>
@@ -195,7 +196,7 @@ export default {
     handleEventCreate(event) {
       this.$store.commit('snackBar/setSnack', {
         color: 'success',
-        message: 'Meeting Created',
+        message: 'Event Created',
       });
       this.events.push(event)
       this.clearLocalState()
@@ -203,9 +204,8 @@ export default {
     handleEventUpdate(eventUpdated) {
       this.$store.commit('snackBar/setSnack', {
         color: 'success',
-        message: 'Meeting Updated',
+        message: 'Event Updated',
       })
-      debugger
       this.events = this.events.filter(event => event.id !== eventUpdated.id)
       this.events.push(eventUpdated)
       this.clearLocalState()
@@ -214,6 +214,14 @@ export default {
       this.eventShow = null
       this.eventDate = null
       this.action = null
+    },
+    handleEventDelete(id){
+      this.$store.commit('snackBar/setSnack', {
+        color: 'success',
+        message: 'Event deleted',
+      })
+      this.events = this.events.filter(event => event.id !== id)
+      this.clearLocalState()
     }
 
 

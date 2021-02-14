@@ -3,7 +3,12 @@
 
     <v-app-bar app class="px-8">
 
-
+      <v-avatar>
+        <img
+            src="cocus-logo.png"
+            alt="John"
+        >
+      </v-avatar>
       <v-spacer></v-spacer>
       <v-menu
           offset-y
