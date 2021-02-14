@@ -1,4 +1,4 @@
-# cocus-agenda
+# vuetify-schedule
 
 ## Project setup
 ```
