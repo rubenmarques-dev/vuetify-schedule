@@ -1,17 +1,20 @@
 <template>
-  <v-form>
+  <v-form
+  >
     <v-text-field
         class="mb-4"
         label="Username"
         :error-messages="this.errors.username"
         hint="This field is case sensitive."
         persistent-hint
+        :loading="requesting"
         v-model="username"
     >
     </v-text-field>
     <v-text-field
         label="Password"
         :type="'password'"
+        :loading="requesting"
         :error-messages="this.errors.password"
         v-model="password"
     >
@@ -42,7 +45,8 @@ export default {
     errors: {
       username: null,
       password: null
-    }
+    },
+    requesting: false
   }),
   methods: {
     validate(){
@@ -56,6 +60,7 @@ export default {
       }
     },
     submit() {
+      this.requesting = true;
       login(this.username, this.password)
           .then(() => {
             return this.$store.dispatch('auth/fetchUser')
@@ -64,6 +69,7 @@ export default {
               this.$router.push('/')
           })
           .catch((error) => {
+            this.requesting = false;
             if (error.response && error.response.status === 401) {
               this.errors.username = 'Wrong credentials'
             }

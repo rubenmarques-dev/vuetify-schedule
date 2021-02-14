@@ -7,13 +7,14 @@
         autofocus
         v-model="name"
         :error-messages="errors.name"
-        @click="validate"
+
     >
     </v-text-field>
     <v-row class="justify-end">
       <v-btn
           color="blue darken-1"
           text
+          :loading="requesting"
           @click="$emit('cancel')"
       >
         Cancel
@@ -21,6 +22,7 @@
       <v-btn
           color="blue darken-1"
           text
+          :loading="requesting"
           @click="validate"
       >
         Create
@@ -39,6 +41,7 @@ export default {
       errors: {
         name: null,
       },
+      requesting: false
     }
   },
   methods: {
@@ -52,7 +55,7 @@ export default {
 
     },
     createParticipant() {
-
+      this.requesting = true;
       ParticipantsRepository.store({
         name:this.name
       })
@@ -64,6 +67,7 @@ export default {
         this.$emit('created', data.data)
       })
       .catch(({response}) => {
+        this.requesting = false;
         if(response.status === 422){
           this.errors.name = response.data.errors.name[0];
         }

@@ -6,7 +6,7 @@
         persistent
         max-width="600"
     >
-      <v-card >
+      <v-card>
         <v-card-title>
           <span class="headline">{{ action | capitalize }} Event</span>
         </v-card-title>
@@ -53,6 +53,7 @@
                     outlined
                     small
                     dark
+                    :loading="requesting"
                     @click="showAddParticipantDialog = true"
                 >
                   <v-icon
@@ -100,6 +101,7 @@
           <v-btn
               color="blue darken-1"
               text
+              :loading="requesting"
               @click="$emit('cancel')"
           >
             Cancel
@@ -107,6 +109,7 @@
           <v-btn
               color="blue darken-1"
               text
+              :loading="requesting"
               @click="validate"
           >
             Save
@@ -170,7 +173,6 @@ export default {
   data() {
     return {
       participants: [],
-      selected: [],
       event: {
         title: '',
         description: '',
@@ -179,6 +181,7 @@ export default {
         participants: [],
       },
       showAddParticipantDialog: false,
+      requesting: false,
       errors: {
         title: null,
         description: null,
@@ -202,7 +205,7 @@ export default {
       if (this.action === 'create') {
         return MeetingRepository.store(this.body)
       } else {
-        return MeetingRepository.update(this.event.id,this.body)
+        return MeetingRepository.update(this.event.id, this.body)
       }
     },
   },
@@ -244,6 +247,7 @@ export default {
       this.errors.startDate = moment(this.event.startDate).isAfter(this.event.endDate) ? 'Start Date must be before end date' : null
     },
     submit() {
+      this.requesting = true
       this.apiCall
           .then(({data}) => {
             this.$emit(this.action, data.data)
